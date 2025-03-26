@@ -1,9 +1,6 @@
-# PLANTILLA PROYECTO - SEMANA 01
-Esta plantilla contiene la estructura básica para comenzar los video-series de la semana 1 de "introeucción al desarrollo de videojuegos con ECS"
-
 # Description
 
-This a project to learn how to development games 🎮 with python 🐍 and pygame, it is a fundamental exercise to make a bouncing square ⬜️ animation
+This a project to learn how to development games 🎮 with python 🐍 and pygame and how to build games with ECS (Entity-Component-System) pattern, it is a fundamental exercise to make a bouncing square ⬜️ animation
 
 # Made with
 

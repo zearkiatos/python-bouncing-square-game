@@ -19,10 +19,17 @@ class GameEngine:
         self._clean()
 
     def _create(self):
-        pass
+        self.square_velocity = pygame.Vector2(100, 100)
+        self.square_position = pygame.Vector2(150, 100)
+        square_size = pygame.Vector2(50,50)
+        square_color = pygame.Color(0, 0, 0)
+
+        self.square_superface = pygame.Surface(square_size)
+        self.square_superface.fill(square_color)
 
     def _calculate_time(self):
-        pass
+        self.clock.tick(self.framerate)
+        self.delta_time = self.clock.get_time() / 1000.0
 
     def _process_events(self):
         for event in pygame.event.get():
@@ -30,10 +37,13 @@ class GameEngine:
                 self.is_running = False
 
     def _update(self):
-        pass
+        # We advance in X to 100 pixeles per seconds (delta_time)
+        self.square_position.x += self.square_velocity.x * self.delta_time
+        self.square_position.y += self.square_velocity.y * self.delta_time
 
     def _draw(self):
         self.screen.fill((0, 200, 128))
+        self.screen.blit(self.square_superface, self.square_position)
         pygame.display.flip()
 
     def _clean(self):

@@ -20,7 +20,7 @@ class GameEngine:
 
     def _create(self):
         self.square_velocity = pygame.Vector2(100, 100)
-        self.square_position = pygame.Vector2(150, 100)
+        self.square_position = pygame.Vector2(-25, 100)
         square_size = pygame.Vector2(50,50)
         square_color = pygame.Color(0, 0, 0)
 
@@ -40,6 +40,21 @@ class GameEngine:
         # We advance in X to 100 pixeles per seconds (delta_time)
         self.square_position.x += self.square_velocity.x * self.delta_time
         self.square_position.y += self.square_velocity.y * self.delta_time
+
+        screen_rectangule = self.screen.get_rect()
+        square_rectangule = self.square_superface.get_rect(topleft = self.square_position)
+
+        if square_rectangule.left <= 0 or square_rectangule.right >= screen_rectangule.width:
+            self.square_velocity.x *= -1
+            square_rectangule.clamp_ip(screen_rectangule)
+            self.square_position.x = square_rectangule.left
+
+        if square_rectangule.top <= 0 or square_rectangule.bottom >= screen_rectangule.height:
+            self.square_velocity.y *= -1
+            square_rectangule.clamp_ip(screen_rectangule)
+            self.square_position.y = square_rectangule.y
+
+        # if my_rectangle.left <= 0 or my_rectangle.right
 
     def _draw(self):
         self.screen.fill((0, 200, 128))

@@ -1,0 +1,10 @@
+services:
+  game:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env.local
+    volumes:
+      - .:/app
+      - /tmp/.X11-unix:/tmp/.X11-unix

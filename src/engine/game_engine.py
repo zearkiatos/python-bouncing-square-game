@@ -1,9 +1,9 @@
 import pygame
 import esper
-from src.ecs.components.c_surface import CSurface
-from src.ecs.components.c_transform import CTransform
-from src.ecs.components.c_velocity import CVelocity
-from src.ecs.systems.system_movement import systems_movement
+from src.ecs.create.prefabric_creator import create_square
+from src.ecs.systems.s_movement import system_movement
+from src.ecs.systems.s_rendering import system_rendering
+from src.ecs.systems.s_screen_bounce import system_screen_bounce
 
 
 class GameEngine:
@@ -28,12 +28,8 @@ class GameEngine:
         self._clean()
 
     def _create(self):
-        square_entity = self.ecs_world.create_entity()
-        self.ecs_world.add_component(square_entity, CSurface(
-            size=pygame.Vector2(50, 50), color=pygame.Color(255, 255, 100)))
-        self.ecs_world.add_component(
-            square_entity, CTransform(position=pygame.Vector2(150, 100)))
-        self.ecs_world.add_component(square_entity, CVelocity(velocity=pygame.Vector2(100, 100)))
+        create_square(self.ecs_world, pygame.Vector2(50, 50), pygame.Vector2(
+            150, 100), pygame.Vector2(150, 300), pygame.Color(255, 100, 100))
 
     def _calculate_time(self):
         self.clock.tick(self.framerate)
@@ -45,11 +41,13 @@ class GameEngine:
                 self.is_running = False
 
     def _update(self):
-        systems_movement()
+        system_movement(self.ecs_world, self.delta_time)
+        system_screen_bounce(self.ecs_world, self.screen)
 
     def _draw(self):
         self.screen.fill((0, 200, 128))
 
+        system_rendering(self.ecs_world, self.screen)
         pygame.display.flip()
 
     def _clean(self):

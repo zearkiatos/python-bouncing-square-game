@@ -1,4 +1,11 @@
 import pygame
+import esper
+from src.ecs.create.prefabric_creator import create_square
+from src.ecs.systems.s_movement import system_movement
+from src.ecs.systems.s_rendering import system_rendering
+from src.ecs.systems.s_screen_bounce import system_screen_bounce
+
+
 class GameEngine:
     def __init__(self) -> None:
         pygame.init()
@@ -7,6 +14,8 @@ class GameEngine:
         self.is_running = False
         self.framerate = 60
         self.delta_time = 0
+
+        self.ecs_world = esper.World()
 
     def run(self) -> None:
         self._create()
@@ -19,13 +28,8 @@ class GameEngine:
         self._clean()
 
     def _create(self):
-        self.square_velocity = pygame.Vector2(100, 100)
-        self.square_position = pygame.Vector2(-25, 100)
-        square_size = pygame.Vector2(50,50)
-        square_color = pygame.Color(0, 0, 0)
-
-        self.square_superface = pygame.Surface(square_size)
-        self.square_superface.fill(square_color)
+        create_square(self.ecs_world, pygame.Vector2(50, 50), pygame.Vector2(
+            150, 100), pygame.Vector2(150, 300), pygame.Color(255, 100, 100))
 
     def _calculate_time(self):
         self.clock.tick(self.framerate)
@@ -37,26 +41,13 @@ class GameEngine:
                 self.is_running = False
 
     def _update(self):
-        # We advance in X to 100 pixeles per seconds (delta_time)
-        self.square_position.x += self.square_velocity.x * self.delta_time
-        self.square_position.y += self.square_velocity.y * self.delta_time
-
-        screen_rectangule = self.screen.get_rect()
-        square_rectangule = self.square_superface.get_rect(topleft = self.square_position)
-
-        if square_rectangule.left <= 0 or square_rectangule.right >= screen_rectangule.width:
-            self.square_velocity.x *= -1
-            square_rectangule.clamp_ip(screen_rectangule)
-            self.square_position.x = square_rectangule.left
-
-        if square_rectangule.top <= 0 or square_rectangule.bottom >= screen_rectangule.height:
-            self.square_velocity.y *= -1
-            square_rectangule.clamp_ip(screen_rectangule)
-            self.square_position.y = square_rectangule.y
+        system_movement(self.ecs_world, self.delta_time)
+        system_screen_bounce(self.ecs_world, self.screen)
 
     def _draw(self):
         self.screen.fill((0, 200, 128))
-        self.screen.blit(self.square_superface, self.square_position)
+
+        system_rendering(self.ecs_world, self.screen)
         pygame.display.flip()
 
     def _clean(self):

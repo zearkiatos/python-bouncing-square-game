@@ -54,8 +54,6 @@ class GameEngine:
             square_rectangule.clamp_ip(screen_rectangule)
             self.square_position.y = square_rectangule.y
 
-        # if my_rectangle.left <= 0 or my_rectangle.right
-
     def _draw(self):
         self.screen.fill((0, 200, 128))
         self.screen.blit(self.square_superface, self.square_position)
